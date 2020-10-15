@@ -69,4 +69,55 @@ function Utility:GetPlayerByName(StringName)
 	end
 end
 
+--[[
+	Path: String that is a path. Example: "Workspace.Part", "ReplicatedStorage.Remotes.RemoteName"
+--]]
+function Utility:WaitForPath(Path)
+	local Found = game
+	local Service = false
+	for Step in string.gmatch(Path, "[^.^]+") do
+		if not Service then
+			Service = true
+			Found = game:GetService(Step)
+		elseif Found:FindFirstChild(Step) then
+			Found = Found[Step]
+		else
+			local FoundIt = false
+			while RunService.Stepped:Wait() and not FoundIt do
+				if Found:FindFirstChild(Step) then
+					Found = Found[Step]
+					FoundIt = true
+				end
+			end
+		end
+	end
+	return Found
+end
+
+--[[
+	Goto: A Vector3 or CFrame value.
+--]]
+function Utility:TeleportTo(Goto)
+	local LocalPlayer = Players.LocalPlayer
+	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local RootPart = Character:WaitForChild("HumanoidRootPart")
+	local Humanoid = Character:WaitForChild("Humanoid")
+
+	if Humanoid then
+		repeat RunService.Stepped:Wait()
+			Humanoid.Jump = true
+		until Humanoid:GetState() ~= Enum.HumanoidStateType.Seated
+	end
+
+	if RootPart then
+		if typeof(Goto) == "Vector3" then
+			RootPart.Position = Goto
+		elseif typeof(Goto) == "CFrame" then
+			RootPart.CFrame = Goto
+		else
+			warn("Utility:TeleportTo(Goto) didn't get a proper value. It got '"..tostring(Goto).."'")
+		end
+	end
+end
+
 return Utility
