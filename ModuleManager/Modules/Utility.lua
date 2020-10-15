@@ -120,6 +120,4 @@ function Utility:TeleportTo(Location)
 	end
 end
 
-
-
 return Utility
