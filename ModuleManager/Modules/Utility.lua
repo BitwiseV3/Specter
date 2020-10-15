@@ -95,9 +95,9 @@ function Utility:WaitForPath(Path)
 end
 
 --[[
-	Goto: A Vector3 or CFrame value.
+	Location: A Vector3 or CFrame value.
 --]]
-function Utility:TeleportTo(Goto)
+function Utility:TeleportTo(Location)
 	local LocalPlayer = Players.LocalPlayer
 	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 	local RootPart = Character:WaitForChild("HumanoidRootPart")
@@ -110,14 +110,16 @@ function Utility:TeleportTo(Goto)
 	end
 
 	if RootPart then
-		if typeof(Goto) == "Vector3" then
-			RootPart.Position = Goto
-		elseif typeof(Goto) == "CFrame" then
-			RootPart.CFrame = Goto
+		if typeof(Location) == "Vector3" then
+			RootPart.Position = Location
+		elseif typeof(Location) == "CFrame" then
+			RootPart.CFrame = Location
 		else
-			warn("Utility:TeleportTo(Goto) didn't get a proper value. It got '"..tostring(Goto).."'")
+			warn("Utility:TeleportTo(Location) didn't get a proper value(CFrame/Vector3). It got '"..tostring(Location).."'")
 		end
 	end
 end
+
+
 
 return Utility
