@@ -29,6 +29,8 @@ function Remote:FirePackage(PackageName)
 		elseif Package.Remote:IsA("RemoteFunction") then
 			return Package.Remote:InvokeServer(unpack(Package.Args))
 		end
+	else
+		warn("Remote:FirePackage(PackageName) has failed, the package with the name '"..tostring(PackageName).."' doesn't exist.")
 	end
 end
 

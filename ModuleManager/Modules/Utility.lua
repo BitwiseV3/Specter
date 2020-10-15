@@ -103,7 +103,7 @@ function Utility:TeleportTo(Location)
 	local RootPart = Character:WaitForChild("HumanoidRootPart")
 	local Humanoid = Character:WaitForChild("Humanoid")
 
-	if Humanoid then
+	if Humanoid and Humanoid:GetState() == Enum.HumanoidStateType.Seated then
 		repeat RunService.Stepped:Wait()
 			Humanoid.Jump = true
 		until Humanoid:GetState() ~= Enum.HumanoidStateType.Seated
