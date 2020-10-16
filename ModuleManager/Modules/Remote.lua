@@ -23,7 +23,7 @@ end
 --]]
 function Remote:FirePackage(PackageName)
 	if PackagedRemotes[PackageName] then
-		local Package = PackagedRemotes[PackagedRemotes]
+		local Package = PackagedRemotes[PackageName]
 		if Package.Remote:IsA("RemoteEvent") then
 			Package.Remote:FireServer(unpack(Package.Args))
 		elseif Package.Remote:IsA("RemoteFunction") then
