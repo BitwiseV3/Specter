@@ -94,6 +94,50 @@ function Utility:WaitForPath(Path)
 	return Found
 end
 
+local function IsMatch(Object, Properties)
+	local Matched, Count = 0, 0
+	for Property, Value in pairs(Properties) do
+		local Success, ObjectValue = pcall(function() return Object[Property] end)
+		Count = Count + 1
+		if Success and ObjectValue == Value then
+			Matched = Matched + 1
+		end
+	end
+	return Matched == Count
+end
+
+--[[
+	Parent: Instance of where the function is going to search inside.
+	Properties: A table of properties {PropertyName = Value} to match objects it finds.
+		Will not return a object unless it matches the property table 100%
+--]]
+function SearchFor(Parent, Properties)
+	if typeof(Parent) == "Instance" then
+		if type(Properties) == "table" then
+			if Properties.ClassName then
+				local Descendants = Parent:GetDescendants()
+				for i = 1, #Descendants do
+					local Object = Descendants[i]
+					if Object.ClassName == Properties.ClassName then
+						if IsMatch(Object, Properties) then
+							return Object
+						end
+					end
+				end
+			else
+				for i = 1, #Descendants do
+					local Object = Descendants[i]
+					if IsMatch(Object, Properties) then
+						return Object
+					end
+				end
+			end
+		end
+	else
+		warn("Utility:SearchFor(Parent, Properties) failed it expected a Instance as it's first argument.")
+	end
+end
+
 --[[
 	Location: A Vector3 or CFrame value.
 --]]
