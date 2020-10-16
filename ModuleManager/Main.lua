@@ -2,7 +2,7 @@
 	Load the module on and wait for LoadModule for action.
 --]]
 local ModuleLocation = "https://raw.githubusercontent.com/BitwiseV3/Specter/main/ModuleManager/Modules/" -- ModuleName.lua
-local Suspended = {}
+local Preloaded = {}
 
 function GetModuleHttp(Link)
 	local Success, Module = pcall(game.HttpGet, game, Link)
@@ -18,7 +18,7 @@ end
 	NameAs: Make the index/name of the module different from the ModuleName to access.
 --]]
 getgenv().PreloadModule = function(ModuleName, NameAs)
-	Suspended[NameAs or ModuleName] = GetModuleHttp(ModuleLocation..ModuleName..".lua")
+	Preloaded[NameAs or ModuleName] = GetModuleHttp(ModuleLocation..ModuleName..".lua")
 end
 
 --[[
@@ -26,9 +26,13 @@ end
 	NameAs: Make the index/name of the module different from the ModuleName to access.
 --]]
 getgenv().LoadModule = function(ModuleName, NameAs)
-	if not Suspended[NameAs or ModuleName] then
-		getgenv()[NameAs or ModuleName] = GetModuleHttp(ModuleLocation..ModuleName..".lua")
+	if not getgenv()[NameAs or ModuleName] then
+		if not Preloaded[NameAs or ModuleName] then
+			getgenv()[NameAs or ModuleName] = GetModuleHttp(ModuleLocation..ModuleName..".lua")
+		else
+			getgenv()[NameAs or ModuleName] = Preloaded[NameAs or ModuleName]
+		end
 	else
-		getgenv()[NameAs or ModuleName] = Suspended[NameAs or ModuleName]
+		warn("LoadModule(ModuleName, NameAs)", NameAs or ModuleName, "was already loaded.")
 	end
 end
