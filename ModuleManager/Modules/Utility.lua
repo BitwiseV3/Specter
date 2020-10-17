@@ -57,7 +57,7 @@ function Utility:GetPlayerByName(StringName)
 			local PlayerList = Players:GetPlayers()
 			for i = 1, #PlayerList do
 				local Player = PlayerList[i]
-				if Player.Name:sub(1, #StringName):lower() == StringName then
+				if Player.Name:sub(1, #StringName):lower() == StringName:lower() then
 					return Player
 				end
 			end
@@ -111,7 +111,7 @@ end
 	Properties: A table of properties {PropertyName = Value} to match objects it finds.
 		Will not return a object unless it matches the property table 100%
 --]]
-function SearchFor(Parent, Properties)
+function Utility:SearchFor(Parent, Properties)
 	if typeof(Parent) == "Instance" then
 		if type(Properties) == "table" then
 			if Properties.ClassName then
