@@ -1,8 +1,8 @@
 local Service = {}
 Service.LoadedServices = {}
 
-local function FormatService(ServiceName)
-    return ""
+local function FormatServiceUrl(ServiceName)
+    return "https://raw.githubusercontent.com/BitwiseV3/Specter/main/Services/"..tostring(ServiceName)
 end
 
 local function HttpGet(Link)
@@ -19,17 +19,24 @@ end
 function Service:Get(ServiceName)
     if ServiceName and Service.LoadedServices[ServiceName] then
         return Service.LoadedServices[ServiceName]
-    else
-        
+    elseif ServiceName then
+        return Service:Load(ServiceName)
     end
 end
 
 function Service:Load(ServiceName)
-
-end
-
-function Service:Remove(ServiceName)
-
+    if not Service.LoadedServices[ServiceName] then
+        local Content = HttpGet(FormatServiceUrl(ServiceName))
+        if Content then
+            local Module = loadstring(Content)()
+            Service.LoadedServices[ServiceName] = Module
+            return Module
+        else
+            warn("Loading module failed, '"..tostring(ServiceName).."' wasn't found in the Services folder.")
+        end
+    else
+        warn("Loading module denied, '"..tostring(ServiceName).."' was already loaded.")
+    end
 end
 
 return Service
