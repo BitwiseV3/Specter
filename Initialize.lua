@@ -73,9 +73,12 @@ for ModuleName, Version in pairs(VersionTable) do
     if not Success then
         writefile("Specter/"..ModuleName..".lua", "--"..Version.."\n"..GetFile(FormatModuleUrl(ModuleName)))
     else
+        print("hi")
         local VSub = Content:find("\n")
+        print(VSub)
         if VSub and type(VSub) == "number" then
             local CVersion = Content:sub(1, VSub - 1)
+            print("CVersion", CVersion, Version)
             if CVersion ~= "--"..Version then
                 print("OUT OF DATE UPDATING")
                 writefile("Specter/"..ModuleName..".lua", "--"..Version.."\n"..GetFile(FormatModuleUrl(ModuleName)))
