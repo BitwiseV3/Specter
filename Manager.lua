@@ -7,6 +7,8 @@ Directory.Folder = "Specter"
 
 -- Main code, don't touch unless you don't know what you're doing.
 local Interface = {}
+Interface.Storage = {}
+Interface.Running = {}
 
 local function GetModuleFromGithub(ModuleName)
 	local Success, File = pcall(function()
@@ -23,11 +25,25 @@ local function GetModuleFromWorkspace(ModuleName)
 end
 
 function Interface:Load(ModuleName)
-
+	local File = GetModuleFromWorkspace(ModuleName) or GetModuleFromGithub(ModuleName)
+	if File then
+		Interface.Storage[ModuleName] = File
+		return File
+	else
+		warn("Failed to find module '"..tostring(ModuleName).."'")
+	end
 end
 
 function Interface:Get(ModuleName)
-
+	if Interface.Running[ModuleName] then
+		return Interface.Running[ModuleName]
+	else
+		local File = Interface:Load(ModuleName)
+		if File then
+			Interface.Running[ModuleName] = loadstring(File)()
+			return Interface.Running[ModuleName]
+		end
+	end
 end
 
 -- Checks modules in Workspace/Specter folder is up to date with Github.
