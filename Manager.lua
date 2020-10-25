@@ -10,14 +10,14 @@ local Interface = {}
 
 local function GetModuleFromGithub(ModuleName)
 	local Success, File = pcall(function()
-		return game:HttpGet(Directory.Url.Modules..ModuleName)
+		return game:HttpGet(Directory.Url.Modules..ModuleName..".lua")
 	end)
 	return Success and File or nil
 end
 
 local function GetModuleFromWorkspace(ModuleName)
 	local Success, File = pcall(function()
-		return readfile(Directory.Folder.."/"..ModuleName)
+		return readfile(Directory.Folder.."/"..ModuleName..".lua")
 	end)
 	return Success and File or nil
 end
@@ -34,7 +34,7 @@ end
 local function UpdateNeeded(CurrentVersion, LatestVersion)
 	local ToSub = CurrentVersion:find("\n")
 	if ToSub and type(ToSub) == "number" then
-		if CurrentVersion:sub(1, ToSub - 1) ~= LatestVersion then
+		if CurrentVersion:sub(1, ToSub - 1) ~= "--"..LatestVersion then
 			return true
 		end
 	end
